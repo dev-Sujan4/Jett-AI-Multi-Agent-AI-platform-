@@ -1,0 +1,19 @@
+# Dependencies
+node_modules/
+
+# Environment Variables & Private Secrets
+.env
+.env.*
+serviceAccountKey.json
+*serviceAccount*.json
+*.pem
+*.key
+
+# Build outputs
+dist/
+build/
+
+# Logs & OS files
+*.log
+.DS_Store
+Thumbs.db   
