@@ -156,11 +156,28 @@ cd ../../../frontend && npm install
 
 ### 4. Running the Project
 
-#### **Option A: In VS Code (Recommended)**
-Press **`Ctrl + Shift + B`** (or go to **Terminal** $\rightarrow$ **Run Build Task...** $\rightarrow$ **Start All Services**).  
-VS Code will automatically open dedicated integrated terminal tabs for all 5 services and start Redis in Docker.
+#### ⚡ **One-Shortcut Launch in VS Code (Pre-configured via `.vscode/tasks.json`)**
+This repository includes a pre-configured [`.vscode/tasks.json`](.vscode/tasks.json) build task. 
 
-#### **Option B: Running Manually in Separate Terminals**
+Simply press:
+```
+Ctrl + Shift + B
+```
+*(Or click **Terminal** in top menu $\rightarrow$ **Run Build Task...** $\rightarrow$ **Start All Services**)*
+
+VS Code will automatically spin up **6 dedicated tabs** in your integrated terminal drawer:
+1. 📑 **`Redis (Docker 6379)`** — Runs `docker compose up` to start Redis
+2. 📑 **`Auth Service (8001)`** — Runs `npm run dev`
+3. 📑 **`Chat Service (8002)`** — Runs `npm run dev`
+4. 📑 **`Agent Service (8003)`** — Runs `npm run dev`
+5. 📑 **`Gateway (8000)`** — Runs `npm run dev`
+6. 📑 **`Frontend (5173)`** — Runs `npm run dev`
+
+---
+
+#### 💻 **Manual Launch (Alternative)**
+
+If not using VS Code, you can run each service in separate terminal windows:
 
 ```powershell
 # 1. Start Redis
@@ -188,3 +205,4 @@ Open **[http://localhost:5173](http://localhost:5173)** in your browser to start
 
 ## 📜 License
 This project is open source and available under the [ISC License](LICENSE).
+
