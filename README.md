@@ -39,8 +39,16 @@ graph TD
 
 ## 🌟 Key Features
 
-- 🧠 **Dynamic Multi-Agent System**: Built with **LangChain & LangGraph** to route requests dynamically to specialized agents.
-- 🌐 **Grounding & Web Search**: Real-time web search powered by the **Tavily API** for live information retrieval.
+- 🧠 **Dynamic Multi-Agent System**: Built with **LangChain & LangGraph** to route requests dynamically to specialized agents:
+  | Agent | Status | Description |
+  | :--- | :---: | :--- |
+  | 🎯 **Router Agent** | 🟢 Active | Classifies user intent and delegates to the right agent node |
+  | 💬 **Chat Agent** | 🟢 Active | General conversation and contextual explanations |
+  | 🌐 **Search Agent** | 🟢 Active | Real-time web retrieval grounded with Tavily API |
+  | 💻 **Coding Agent** | 🟡 In Development | Code generation, debugging, and syntax assistance |
+  | 👁️ **Vision Agent** | 🟡 In Development | Multimodal image understanding and analysis |
+  | 📄 **PDF Agent** | 🟡 In Development | Document extraction and Q&A |
+  | 📊 **PPT Agent** | 🟡 In Development | Slide and presentation generation |
 - ⚡ **Microservices Architecture**:
   - **API Gateway (`8000`)**: Single entry point handling request routing, auth validation, and cookie forwarding.
   - **Auth Service (`8001`)**: Firebase Admin authentication paired with Redis-backed session management.
