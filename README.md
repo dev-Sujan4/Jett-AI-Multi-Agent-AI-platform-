@@ -9,7 +9,18 @@
 
 ---
 
-## 🏗️ Architecture
+## 📚 Quick Navigation
+
+- [Architecture](#architecture)
+- [Key Features](#key-features)
+- [Tech Stack](#tech-stack)
+- [Project Structure](#project-structure)
+- [Getting Started](#getting-started)
+- [License](#license)
+
+---
+
+## 🏗️ Architecture <a id="architecture"></a>
 
 ```mermaid
 graph TD
@@ -37,7 +48,7 @@ graph TD
 
 ---
 
-## 🌟 Key Features
+## 🌟 Key Features <a id="key-features"></a>
 
 - 🧠 **Dynamic Multi-Agent System**: Built with **LangChain & LangGraph** to route requests dynamically to specialized agents:
   | Agent | Status | Description |
@@ -58,7 +69,7 @@ graph TD
 
 ---
 
-## 🛠️ Tech Stack
+## 🛠️ Tech Stack <a id="tech-stack"></a>
 
 | Layer | Technologies |
 | :--- | :--- |
@@ -66,11 +77,11 @@ graph TD
 | **Backend Microservices** | Node.js, Express 5, LangGraph, LangChain, `express-http-proxy` |
 | **Authentication** | Firebase Admin SDK, JWT, HTTP-Only Cookie Sessions |
 | **Database & Cache** | MongoDB (Mongoose), Redis (`ioredis`), Docker |
-| **AI / LLMs** | Google Gemini, Groq (Llama 3), Tavily Search API |
+| **AI / LLMs** | Google Gemini, Groq , Tavily Search API |
 
 ---
 
-## 📁 Project Structure
+## 📁 Project Structure <a id="project-structure"></a>
 
 ```
 jettAI/
@@ -89,7 +100,7 @@ jettAI/
 
 ---
 
-## 🚀 Getting Started
+## 🚀 Getting Started <a id="getting-started"></a>
 
 ### 1. Prerequisites
 - [Node.js](https://nodejs.org/) (v18 or higher)
@@ -211,6 +222,6 @@ Open **[http://localhost:5173](http://localhost:5173)** in your browser to start
 
 ---
 
-## 📜 License
+## 📜 License <a id="license"></a>
 This project is open source and available under the [ISC License](LICENSE).
 
