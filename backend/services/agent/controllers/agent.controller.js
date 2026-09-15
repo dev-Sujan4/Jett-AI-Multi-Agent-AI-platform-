@@ -24,11 +24,11 @@ export const agent = async (req, res) => {
       conversationId,
       role: "assistant",
       content: result?.aiResponse,
-      images:result.images
+      images:result?.images
     });
 
     return res.status(200).json({ response: result?.aiResponse,
-      images:result.images
+      images:result?.images
      });
   } catch (error) {
     console.log(error);
