@@ -7,9 +7,11 @@ import { getModel } from "../config/llmModels.js";
 import { getMemory } from "../config/memory.js";
 
 export const chatAgent = async (state) => {
+
+try {
   const llm = await getModel("chat");
 
-  const history = await getMemory(state.conversationId);
+  const history = (await getMemory(state.conversationId)) || [];
 
   const searchContext = state.searchResults?` 
   Web Search Results :
@@ -49,22 +51,43 @@ Formatting:
 
   const messages = [new SystemMessage(systemPrompt)];
 
-  history.forEach((msg) => {
-    if (msg.role == "user") {
-      messages.push(
-        new HumanMessage({
-          content: msg.content,
-        }),
-      );
-    }
-    if (msg.role == "assistant") {
-      messages.push(
-        new AIMessage({
-          content: msg.content,
-        }),
-      );
-    }
-  });
+const MAX_HISTORY_TOKENS = 2000;
+
+const estimateTokens = (text = "") => {
+  return Math.ceil(text.length / 4);
+};
+
+let historyTokens = 0;
+
+const recentHistory = Array.isArray(history)
+  ? [...history].reverse()
+  : [];
+
+for (const msg of recentHistory) {
+  const msgTokens = estimateTokens(msg.content || "");
+
+  if (historyTokens + msgTokens > MAX_HISTORY_TOKENS) {
+    break;
+  }
+
+  if (msg.role === "user") {
+    messages.splice(1, 0,
+      new HumanMessage({
+        content: msg.content,
+      })
+    );
+  }
+
+  if (msg.role === "assistant") {
+    messages.splice(1, 0,
+      new AIMessage({
+        content: msg.content,
+      })
+    );
+  }
+
+  historyTokens += msgTokens;
+}
 
 
   messages.push(
@@ -80,4 +103,11 @@ Formatting:
     ...state,
     aiResponse: response.content,
   };
+} catch (error) {
+  return {
+    ...state,
+    aiResponse: "Failed to generate response"
+  };
+}
+
 };

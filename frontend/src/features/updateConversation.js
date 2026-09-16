@@ -1,9 +1,12 @@
 import axios from "axios";
 
+const serverUrl = import.meta.env.VITE_SERVER_URL || "http://localhost:8000";
+
 export const updateConversation = async (payload) => {
   try {
     const { data } = await axios.post(
-      "http://localhost:8000/api/chat/update-conversation" ,payload,
+      `${serverUrl}/api/chat/update-conversation`,
+      payload,
       {
         withCredentials: true,
       },

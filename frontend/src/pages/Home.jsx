@@ -15,8 +15,9 @@ function Home() {
 
   const handleLogin = async (token) => {
     try {
+      const serverUrl = import.meta.env.VITE_SERVER_URL || "http://localhost:8000";
       const { data } = await Axios.post(
-        "http://localhost:8000/api/auth/login",
+        `${serverUrl}/api/auth/login`,
         { token },
         { withCredentials: true },
       );
@@ -39,10 +40,10 @@ function Home() {
       <ChatArea />
 
       {!userData && (
-        <div className="fixed inset-0 z-50 flex items-center justify-center bg-black/60 backdrop-blur-sm">
-          <div className="w-85 bg-[#13151c] border border-white/8 rounded-2xl p-7 flex flex-col gap-5">
+        <div className="fixed inset-0 z-50 flex items-center justify-center p-4 bg-black/60 backdrop-blur-sm">
+          <div className="w-full max-w-[340px] sm:max-w-sm bg-[#13151c] border border-white/8 rounded-2xl p-5 sm:p-7 flex flex-col gap-5">
             <div className="flex flex-col gap-1">
-              <h2 className="text-[17px] font-semibold text-slate-100 tracking-right">
+              <h2 className="text-[17px] font-semibold text-slate-100 tracking-tight">
                 Welcome to JettAI
               </h2>
               <p className="text-[13px] text-slate-500">

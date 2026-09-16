@@ -1,20 +1,99 @@
 import { getModel } from "../config/llmModels.js";
+import Document from "../models/document.model.js";
 
-export const router = async (state) => {
-
-  if(state.agent && state.agent!=="auto"){
-      return {
-    ...state,
-    agent : state.agent
-  };
+const isPdfFile = (file) => {
+  if (!file) return false;
+  return (
+    file.mimetype === "application/pdf" ||
+    /\.pdf$/i.test(file.originalname || "")
+  );
 };
 
+const isImageFile = (file) => {
+  if (!file) return false;
+  return (
+    file.mimetype?.startsWith("image/") ||
+    /\.(png|jpe?g|webp|gif|svg|bmp)$/i.test(file.originalname || "")
+  );
+};
 
+export const router = async (state) => {
+  const selectedAgent = state.agent ? state.agent.toLowerCase().trim() : "auto";
 
+  // Rule A: PDF agent selected
+  if (selectedAgent === "pdf" || selectedAgent === "pdfrag") {
+    const hasUploadedPdf = isPdfFile(state.file);
+    let hasActivePdfDoc = false;
 
-  const llm = await getModel("router");
+    if (state.conversationId) {
+      try {
+        const activeDoc = await Document.findOne({
+          conversationId: state.conversationId,
+          status: "active",
+        });
+        if (activeDoc) {
+          hasActivePdfDoc = true;
+        }
+      } catch (err) {
+        console.error("Error looking up active document in router:", err.message);
+      }
+    }
 
-const prompt = `
+    if (hasUploadedPdf || hasActivePdfDoc) {
+      return {
+        ...state,
+        agent: "pdfRag",
+      };
+    } else {
+      return {
+        ...state,
+        agent: "pdfRag",
+        aiResponse: "Please upload a PDF first.",
+      };
+    }
+  }
+
+  // Rule B: Image/Vision agent selected
+  if (
+    selectedAgent === "vision" ||
+    selectedAgent === "image" ||
+    selectedAgent === "imageanalyzer"
+  ) {
+    const hasUploadedImage = isImageFile(state.file);
+
+    if (hasUploadedImage) {
+      return {
+        ...state,
+        agent: "imageAnalyzer",
+      };
+    } else {
+      return {
+        ...state,
+        agent: "imageAnalyzer",
+        aiResponse: "Please upload an image first.",
+      };
+    }
+  }
+
+  // Rule C: Auto selected
+  if (selectedAgent === "auto") {
+    if (isPdfFile(state.file)) {
+      return {
+        ...state,
+        agent: "pdfRag",
+      };
+    }
+
+    if (isImageFile(state.file)) {
+      return {
+        ...state,
+        agent: "imageAnalyzer",
+      };
+    }
+
+    // No file: use LLM router
+    const llm = await getModel("router");
+    const prompt = `
 You are an agent router.
 
 Classify ONLY the latest user request.
@@ -36,10 +115,25 @@ Latest user request:
 ${state.prompt}
 `;
 
-  const response = await llm.invoke(prompt);
-// console.log(response)
+    try {
+      const response = await llm.invoke(prompt);
+      const routedAgent = response.content.trim().toLowerCase();
+      return {
+        ...state,
+        agent: routedAgent,
+      };
+    } catch (err) {
+      console.error("LLM router error:", err.message);
+      return {
+        ...state,
+        agent: "chat",
+      };
+    }
+  }
+
+  // Rule D: Explicit normal agents (chat, search, coding, ppt, etc.)
   return {
     ...state,
-    agent : response.content.trim().toLowerCase()
+    agent: selectedAgent,
   };
 };

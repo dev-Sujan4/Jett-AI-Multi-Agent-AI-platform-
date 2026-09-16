@@ -7,14 +7,13 @@ const groq = new ChatGroq({
 });
 
 const gemini = new ChatGoogleGenerativeAI({
-  model: "gemini-2.5-flash",
+  model: "gemini-3.6-flash",
 });
 
 const openrouter = new ChatOpenRouter({
   model: "deepseek/deepseek-chat",
   temperature: 0,
   maxTokens: 2000,
-
 });
 
 export const getModel = async (agent) => {
@@ -25,7 +24,10 @@ export const getModel = async (agent) => {
       return groq;
     case "coding":
       return openrouter;
-
+    case "imageAnalyzer":
+      return gemini;
+    case "pdfRag":
+      return groq;
       
     default:
       return groq;

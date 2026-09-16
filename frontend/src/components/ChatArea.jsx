@@ -1,5 +1,4 @@
-/* eslint-disable no-undef */
-import React, { useEffect } from 'react'
+import { useEffect } from 'react'
 import MessageList from './MessageList'
 import Nav from './Nav'
 import ChatInput from './ChatInput'
@@ -28,7 +27,7 @@ function ChatArea() {
   
   ,[selectedConversation?._id])
   return (
-    <div className = "flex-1 flex flex-col min-w-0">
+    <div className="flex-1 flex flex-col min-w-0 h-screen overflow-hidden relative">
       <Nav/>
       <MessageList/>
       <ChatInput/>

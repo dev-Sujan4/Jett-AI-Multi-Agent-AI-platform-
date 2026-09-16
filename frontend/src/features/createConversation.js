@@ -1,9 +1,11 @@
 import axios from "axios";
 
+const serverUrl = import.meta.env.VITE_SERVER_URL || "http://localhost:8000";
+
 export const createConversation = async () => {
   try {
     const { data } = await axios.get(
-      "http://localhost:8000/api/chat/create-conversation",
+      `${serverUrl}/api/chat/create-conversation`,
       {
         withCredentials: true,
       },

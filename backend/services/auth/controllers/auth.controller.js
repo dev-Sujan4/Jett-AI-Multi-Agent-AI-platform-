@@ -33,10 +33,12 @@ export const login = async (req, res) => {
       7 * 24 * 60 * 60,
     );
 
+    const isProduction = process.env.NODE_ENV === "production";
+
     res.cookie("session", sessionID, {
       httpOnly: true,
-      secure: false,
-      sameSite: "strict",
+      secure: isProduction,
+      sameSite: isProduction ? "none" : "lax",
       path: "/",
       maxAge: 7 * 24 * 60 * 60 * 1000,
     });
@@ -53,10 +55,12 @@ export const logOut = async (req, res) => {
 
     await redis.del(`session-${sessionID}`);
 
+    const isProduction = process.env.NODE_ENV === "production";
+
     res.clearCookie("session", {
       httpOnly: true,
-      secure: false,
-      sameSite: "strict",
+      secure: isProduction,
+      sameSite: isProduction ? "none" : "lax",
       path: "/",
     });
 
