@@ -19,10 +19,7 @@
 - [Tech Stack](#tech-stack)
 - [Project Structure](#project-structure)
 - [Getting Started](#getting-started)
-  - [Prerequisites](#prerequisites)
-  - [Environment Configuration](#environment-configuration)
-  - [Installation](#installation)
-  - [Running the Services](#running-the-services)
+
 - [License](#license)
 
 ---
