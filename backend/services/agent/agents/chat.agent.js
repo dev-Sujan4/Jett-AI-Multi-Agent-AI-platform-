@@ -11,7 +11,10 @@ export const chatAgent = async (state) => {
 try {
   const llm = await getModel("chat");
 
-  const history = (await getMemory(state.conversationId)) || [];
+  const trimmedPrompt = state.prompt?.trim() || "";
+  const isSmallTalk = /^(hi|hello|hey|greetings|hola|good\s(morning|afternoon|evening)|howdy|sup|thanks|thank\syou|ok|okay|bye|goodbye)\b/i.test(trimmedPrompt);
+
+  const history = isSmallTalk ? [] : ((await getMemory(state.conversationId)) || []);
 
   const searchContext = state.searchResults?` 
   Web Search Results :
@@ -51,7 +54,7 @@ Formatting:
 
   const messages = [new SystemMessage(systemPrompt)];
 
-const MAX_HISTORY_TOKENS = 2000;
+const MAX_HISTORY_TOKENS = 800;
 
 const estimateTokens = (text = "") => {
   return Math.ceil(text.length / 4);
@@ -98,6 +101,10 @@ for (const msg of recentHistory) {
   console.log(messages);
 
   const response = await llm.invoke(messages);
+  const tokenUsage = response.response_metadata?.tokenUsage || response.usage_metadata;
+  if (tokenUsage) {
+    console.log("📊 Token Usage:", tokenUsage);
+  }
 
   return {
     ...state,

@@ -5,10 +5,8 @@ export const ProxyWithHeader = (serviceUrl) => {
       parseReqBody: false,
       limit: "50mb",
     proxyReqOptDecorator: (proxyReqOpts, srcReq) => {
-      if (srcReq.user) {
-        proxyReqOpts.headers["x-user-id"] = srcReq.user.userId;
-      }
-      return proxyReqOpts
+      proxyReqOpts.headers["x-user-id"] = srcReq.user?.userId || "demo-user";
+      return proxyReqOpts;
     },
   });
 };

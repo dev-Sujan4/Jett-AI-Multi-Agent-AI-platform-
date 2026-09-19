@@ -1,18 +1,30 @@
-/* eslint-disable react-hooks/exhaustive-deps */
 import { useEffect } from "react";
 import Home from "./pages/Home";
-import getCurrentUser from "./features/getCurrentUser";
 import { useDispatch } from "react-redux";
 import { setUserdata } from "./redux/userSlice";
+import axios from "axios";
 
 function App() {
   const dispatch = useDispatch();
   useEffect(() => {
-    const getUser = async () => {
-      const data = await getCurrentUser();
-      dispatch(setUserdata(data));
-    };
-    getUser();
+    const storedName = localStorage.getItem("demo_user_name");
+    const storedId = localStorage.getItem("demo_user_id");
+
+    if (storedName && storedId) {
+      axios.defaults.headers.common["x-demo-name"] = storedName;
+      axios.defaults.headers.common["x-demo-user"] = storedId;
+
+      dispatch(
+        setUserdata({
+          _id: storedId,
+          userId: storedId,
+          name: storedName,
+          email: `${storedId}@demo.com`,
+        })
+      );
+    } else {
+      dispatch(setUserdata(null));
+    }
   }, []);
   return <Home />;
 }

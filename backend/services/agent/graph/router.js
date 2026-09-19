@@ -91,6 +91,16 @@ export const router = async (state) => {
       };
     }
 
+    // Fast path: Simple greetings, gratitude, acknowledgments bypass LLM router
+    const trimmedPrompt = state.prompt?.trim() || "";
+    const isSmallTalk = /^(hi|hello|hey|greetings|hola|good\s(morning|afternoon|evening)|howdy|sup|thanks|thank\syou|ok|okay|bye|goodbye)\b/i.test(trimmedPrompt);
+    if (isSmallTalk) {
+      return {
+        ...state,
+        agent: "chat",
+      };
+    }
+
     // No file: use LLM router
     const llm = await getModel("router");
     const prompt = `
