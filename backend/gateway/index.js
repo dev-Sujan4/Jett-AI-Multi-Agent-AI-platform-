@@ -21,6 +21,9 @@ app.use(
 );
 
 app.use(cookieParser())
+// review route 
+app.post("/api/chat/feedback", proxy(process.env.CHAT_SERVICE, {proxyReqPathResolver: () => "/feedback"}));
+
 app.use("/api/auth", proxy(process.env.AUTH_SERVICE));
 app.use("/api/chat",protect, ProxyWithHeader(process.env.CHAT_SERVICE));
 app.use("/api/agent", protect, dailyLimit, ProxyWithHeader(process.env.AGENT_SERVICE));

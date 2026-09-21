@@ -11,13 +11,12 @@ import {
 import { useState, useEffect } from "react";
 import { useDispatch, useSelector } from "react-redux";
 import {
-  addConversation,
   setConversations,
   setSelectedConversation,
 } from "../redux/conversationSlice";
-import { setUserdata } from "../redux/userSlice";
+import { setUserdata, setShowLoginPrompt } from "../redux/userSlice";
+import { setMessages } from "../redux/messageSlice";
 import { getConversations } from "../features/getConversations";
-import { createConversation } from "../features/createConversation";
 import logOut from "../features/logOut";
 
 function SideBar() {
@@ -33,18 +32,14 @@ function SideBar() {
 
   useEffect(() => {
     const getConv = async () => {
+      if (!userData) return;
       const data = await getConversations();
       dispatch(setConversations(data));
     };
 
     getConv();
-  }, [userData?._id]);
-
-  const handleCreateConversation = async () => {
-    const data = await createConversation();
-    dispatch(addConversation(data));
-  };
-
+  }, [userData]);
+  
   if (collapsed) {
     return (
       <>
@@ -52,6 +47,7 @@ function SideBar() {
           className="lg:hidden fixed top-3 left-3 z-40 flex items-center justify-center w-8 h-8 rounded-lg bg-[#13151c] text-slate-400 hover:text-slate-200 border border-white/10 shadow-lg cursor-pointer transition-colors"
           onClick={() => setCollapsed(false)}
           aria-label="Open sidebar"
+          title="Open sidebar"
         >
           <PanelRight size={16} />
         </button>
@@ -60,13 +56,23 @@ function SideBar() {
           <button
             className="flex items-center justify-center w-9 h-9 rounded-xl text-slate-500 hover:text-slate-200 hover:bg-white/[0.05] transition-colors duration-150 bg-transparent border-none cursor-pointer mb-1"
             onClick={() => setCollapsed(false)}
+            aria-label="Open sidebar"
+            title="Open sidebar"
           >
             <PanelRight size={16} />
           </button>
 
           <button
             className="flex items-center justify-center w-9 h-9 rounded-xl text-slate-500 hover:text-slate-200 hover:bg-white/[0.05] transition-colors duration-150 bg-transparent border-none cursor-pointer"
-            onClick={()=>dispatch(setSelectedConversation(null))}
+            onClick={() => {
+              if (!userData) {
+                dispatch(setShowLoginPrompt(true));
+                return;
+              }
+              dispatch(setSelectedConversation(null));
+            }}
+            aria-label="New chat"
+            title="New chat"
           >
             <Plus size={17} />
           </button>
@@ -78,6 +84,7 @@ function SideBar() {
               return (
                 <div
                   onClick={() => {
+                    if (selectedConversation?._id === conv._id) return;
                     dispatch(setSelectedConversation(conv));
                   }}
                   key={conv._id}
@@ -101,7 +108,14 @@ function SideBar() {
             })}
           </div>
 
-          <div className="relative shrink-0">
+          <div
+            onClick={() => {
+              if (!userData) {
+                dispatch(setShowLoginPrompt(true));
+              }
+            }}
+            className={`relative shrink-0 ${!userData ? 'cursor-pointer' : ''}`}
+          >
             {userData?.avatar && !imageError ? (
               <img
                 className="w-9 h-9 rounded-[10px] object-cover border-2 border-indigo-500/25"
@@ -110,7 +124,7 @@ function SideBar() {
                 onError={() => setImageError(true)}
               />
             ) : (
-              <div className="w-9 h-9 rounded-[10px] bg-white/[0.06] flex items-center justify-center">
+              <div className="w-9 h-9 rounded-[10px] bg-white/[0.06] flex items-center justify-center hover:bg-white/[0.1] transition-colors">
                 <User size={15} className="text-slate-400" />
               </div>
             )}
@@ -136,6 +150,7 @@ function SideBar() {
               className="flex items-center justify-center w-7 h-7 rounded-lg text-slate-500 hover:text-slate-200 hover:bg-white/[0.05] transition-colors duration-150 bg-transparent border-none cursor-pointer"
               onClick={() => setCollapsed(true)}
               aria-label="Collapse sidebar"
+              title="Collapse sidebar"
             >
               <PanelLeftIcon size={16} />
             </button>
@@ -157,6 +172,7 @@ function SideBar() {
                 }
               }}
               aria-label="New chat"
+              title="New chat"
             >
               <PenSquareIcon size={14} />
             </button>
@@ -194,6 +210,7 @@ function SideBar() {
             return (
               <div
                 onClick={() => {
+                  if (selectedConversation?._id === conv._id) return;
                   dispatch(setSelectedConversation(conv));
                   if (typeof window !== "undefined" && window.innerWidth < 1024) {
                     setCollapsed(true);
@@ -268,14 +285,21 @@ function SideBar() {
                   onClick={() => {
                     logOut();
                     dispatch(setUserdata(null));
+                    dispatch(setSelectedConversation(null));
+                    dispatch(setMessages([]));
+                    dispatch(setConversations([]));
                   }}
+                  title="Logout"
                 >
                   <LogOut size={16} />
                 </button>
               </div>
             </div>
           ) : (
-            <button className="w-full flex items-center justify-center gap-2 text-sm font-medium text-slate-200 bg-white/[0.05] border border-white/[0.08] rounded-xl px-[11px] py-2.5 cursor-pointer hover:bg-white/[0.08] transition-colors duration-150">
+            <button
+              onClick={() => dispatch(setShowLoginPrompt(true))}
+              className="w-full flex items-center justify-center gap-2 text-sm font-medium text-slate-200 bg-white/[0.05] border border-white/[0.08] rounded-xl px-[11px] py-2.5 cursor-pointer hover:bg-white/[0.08] transition-colors duration-150"
+            >
               Login
             </button>
           )}

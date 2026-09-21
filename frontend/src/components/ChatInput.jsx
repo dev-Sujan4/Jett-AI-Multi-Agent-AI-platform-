@@ -7,12 +7,14 @@ import { createConversation } from '../features/createConversation'
 import { addConversation, setConvTitle, setSelectedConversation } from '../redux/conversationSlice'
 import { updateConversation } from '../features/updateConversation'
 import { removeDocument } from '../features/removeDocument'
+import { setShowLoginPrompt } from '../redux/userSlice'
 
 function ChatInput() {
     const [value,setValue]=useState("")
     const [selectedAgent ,setSelectedAgent]=useState("Auto")
        const { selectedConversation } = useSelector(
         (state) => state.conversation)
+       const { userData } = useSelector((state) => state.user)
 
     const [selectedFile, setSelectedFile] = useState(null)
     const fileRef = useRef(null)
@@ -40,6 +42,10 @@ function ChatInput() {
     }
 
     const handleSendMessage = async () => {
+        if (!userData) {
+          dispatch(setShowLoginPrompt(true));
+          return;
+        }
 
         let conversation = selectedConversation
 
@@ -221,6 +227,7 @@ function ChatInput() {
                 disabled={!value}
                 onClick={handleSendMessage}
                 aria-label="Send message"
+                title="Send message"
                 className={`flex items-center justify-center w-7 h-7 sm:w-8 sm:h-8 rounded-lg border-none cursor-pointer transition-all duration-150 ${value.trim()?"bg-gradient-to-br from-indigo-500 to-violet-700 hover:opacity-90 text-white":"bg-white/0.05 text-slate-600 cursor-not-allowed"}`}>
                     <Send size={14}/>
                 </button>

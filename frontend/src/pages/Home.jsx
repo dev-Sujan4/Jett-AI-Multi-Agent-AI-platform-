@@ -1,27 +1,30 @@
 import { signInWithPopup } from "firebase/auth";
 import { auth, googleProvider } from "../../utils/firebase";
 import { FcGoogle } from "react-icons/fc";
+import { X } from "lucide-react";
 
 import Axios from "axios";
 import { useDispatch, useSelector } from "react-redux";
-import { setUserdata } from "../redux/userSlice";
+import { setUserdata, setShowLoginPrompt } from "../redux/userSlice";
 import ChatArea from "../components/ChatArea";
 import SideBar from "../components/SideBar";
 
 function Home() {
   const dispatch = useDispatch();
 
-  const { userData } = useSelector((state) => state.user);
+  const { showLoginPrompt } = useSelector((state) => state.user);
 
   const handleLogin = async (token) => {
     try {
-      const serverUrl = import.meta.env.VITE_SERVER_URL || "http://localhost:8000";
+      const serverUrl =
+        import.meta.env.VITE_SERVER_URL || "http://localhost:8000";
       const { data } = await Axios.post(
         `${serverUrl}/api/auth/login`,
         { token },
         { withCredentials: true },
       );
       dispatch(setUserdata(data));
+      dispatch(setShowLoginPrompt(false));
     } catch (error) {
       console.log(error);
     }
@@ -39,15 +42,22 @@ function Home() {
       <SideBar />
       <ChatArea />
 
-      {!userData && (
+      {showLoginPrompt && (
         <div className="fixed inset-0 z-50 flex items-center justify-center p-4 bg-black/60 backdrop-blur-sm">
-          <div className="w-full max-w-[340px] sm:max-w-sm bg-[#13151c] border border-white/8 rounded-2xl p-5 sm:p-7 flex flex-col gap-5">
-            <div className="flex flex-col gap-1">
+          <div className="relative w-full max-w-[340px] sm:max-w-md md:max-w-lg bg-[#13151c] border border-white/8 rounded-2xl p-5 sm:p-7 flex flex-col gap-5">
+            <button
+              onClick={() => dispatch(setShowLoginPrompt(false))}
+              className="absolute top-4 right-4 p-1 text-slate-400 hover:text-white rounded-lg hover:bg-white/10 transition-colors"
+              aria-label="Close modal"
+            >
+              <X size={18} />
+            </button>
+            <div className="flex flex-col gap-1 pr-6 ">
               <h2 className="text-[17px] font-semibold text-slate-100 tracking-tight">
                 Welcome to JettAI
               </h2>
-              <p className="text-[13px] text-slate-500">
-                Please login to continue using the app.{" "}
+              <p className="text-[14px] mt-2 text-slate-500">
+                Sign in to continue <br />{" "}
               </p>
             </div>
             <button
@@ -60,6 +70,11 @@ function Home() {
               />
               <span>Continue with Google</span>
             </button>
+            <p className="text-[14px] mt-2 text-slate-500">
+              This application uses Google authentication through Firebase. <br />
+              Sign-in is required to access the AI services, which use the
+              application's configured API credentials.
+            </p>
           </div>
         </div>
       )}

@@ -24,7 +24,7 @@ const dailyLimit = async (req, res, next) => {
 
     if (count > MAX_REQUESTS) {
       return res.status(429).json({
-        message: "Daily request limit exceeded. Maximum 4 requests allowed.",
+        message: "Daily request limit exceeded. Maximum 4 requests allowed. Please leave a review in the feedback section.",
       });
     }
 

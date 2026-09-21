@@ -1,5 +1,6 @@
 import Conversation from "../models/conversation.model.js";
 import Message from "../models/message.model.js";
+import Feedback from "../models/feedback.model.js";
 
 export const createConversation = async (req, res) => {
   try {
@@ -69,5 +70,28 @@ export const getMessages = async (req, res) => {
     return res.status(200).json(message);
   } catch (error) {
     return res.status(500).json({ message: `get message error ${error}` });
+  }
+};
+
+export const createFeedback = async (req, res) => {
+  try {
+    const { rating, email, feedback } = req.body;
+
+    const newFeedback = await Feedback.create({
+      rating,
+      email,
+      feedback,
+    });
+
+
+   return res.status(201).json({
+      success: true,
+      message: "Feedback submitted successfully",
+      feedback: newFeedback,
+    });
+  } catch (error) {
+    return res.status(400).json({
+      message: error.message,
+    });
   }
 };
