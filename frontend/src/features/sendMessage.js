@@ -15,6 +15,13 @@ try {
     return data
 } catch (error) {
     console.log(error)
+
+    if (error.response?.status === 429) {
+      return {
+        response: error.response.data.message
+      }
+    }
+
     return null 
 }
 }

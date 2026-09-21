@@ -57,7 +57,7 @@ function ChatInput() {
             
         }
 
-            console.log(selectedFile)
+            
     const formData = new FormData()
     formData.append("prompt", value.trim())
     formData.append("conversationId", conversation?._id)
@@ -73,7 +73,7 @@ function ChatInput() {
         setValue("")
         const data = await sendMessage(formData)
         dispatch(addMessage({role:"assistant",content: data?.response,images:data?.images}))
-        console.log(data)
+        
     }
 
     const agents = [
