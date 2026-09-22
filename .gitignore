@@ -1,19 +1,27 @@
 # Dependencies
 node_modules/
 
-# Environment Variables & Private Secrets
+# Environment variables
 .env
 .env.*
-serviceAccountKey.json
-*serviceAccount*.json
-*.pem
-*.key
 
 # Build outputs
 dist/
 build/
 
-# Logs & OS files
+# Logs
 *.log
+
+# Editor and OS files
 .DS_Store
-Thumbs.db   
+.vscode/
+.idea/
+
+# Service Accounts and Secrets
+serviceAccountKey.json
+*-service-account.json
+
+# Generated files and uploads
+temp/
+uploads/
+tmp/
