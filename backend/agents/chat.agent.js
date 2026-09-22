@@ -43,7 +43,7 @@ Markdown Formatting (when applicable):
 
   const messages = [new SystemMessage(systemPrompt)];
 
-const MAX_HISTORY_TOKENS = 2000;
+const MAX_HISTORY_TOKENS = 800;
 
 const estimateTokens = (text = "") => {
   return Math.ceil(text.length / 4);
