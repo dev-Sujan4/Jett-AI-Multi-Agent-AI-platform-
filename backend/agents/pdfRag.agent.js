@@ -73,8 +73,8 @@ export const pdfRag = async (state) => {
         }
 
         const splitter = new RecursiveCharacterTextSplitter({
-          chunkSize: 1000,
-          chunkOverlap: 200,
+          chunkSize: 1500,
+          chunkOverlap: 400,
         });
 
         const docs = await splitter.createDocuments([text]);
@@ -117,7 +117,7 @@ export const pdfRag = async (state) => {
 
     console.log(`[PDF RAG] Querying existing collection: ${collectionName}`);
     const store = await getExistingVectorStore(collectionName);
-    const relevantDocs = await store.similaritySearch(state.prompt, 5);
+    const relevantDocs = await store.similaritySearch(state.prompt, 20);
 
     const context = relevantDocs.map((d) => d.pageContent).join("\n\n");
 
