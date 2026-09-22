@@ -1,17 +1,20 @@
 {
-  "name": "chat",
+  "name": "auth-chat",
   "type": "module",
   "version": "1.0.0",
-  "description": "",
+  "description": "Merged Auth and Chat Service",
   "main": "index.js",
   "scripts": {
+    "start": "node index.js",
     "dev": "nodemon index.js"
   },
   "author": "",
   "license": "ISC",
   "dependencies": {
+    "cookie-parser": "^1.4.7",
     "dotenv": "^17.4.2",
     "express": "^5.2.1",
+    "firebase-admin": "^14.3.0",
     "mongoose": "^9.9.5",
     "nodemon": "^3.1.14"
   }

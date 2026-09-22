@@ -18,27 +18,11 @@
       }
     },
     {
-      "label": "Auth Service (8001)",
+      "label": "Auth-Chat Service (8001)",
       "type": "shell",
       "command": "npm run dev",
       "options": {
-        "cwd": "${workspaceFolder}/backend/services/auth"
-      },
-      "isBackground": true,
-      "problemMatcher": [],
-      "presentation": {
-        "reveal": "always",
-        "panel": "dedicated",
-        "focus": false,
-        "clear": false
-      }
-    },
-    {
-      "label": "Chat Service (8002)",
-      "type": "shell",
-      "command": "npm run dev",
-      "options": {
-        "cwd": "${workspaceFolder}/backend/services/chat"
+        "cwd": "${workspaceFolder}/backend/services/auth-chat"
       },
       "isBackground": true,
       "problemMatcher": [],
@@ -102,8 +86,7 @@
       "dependsOrder": "parallel",
       "dependsOn": [
         "Redis (Docker 6379)",
-        "Auth Service (8001)",
-        "Chat Service (8002)",
+        "Auth-Chat Service (8001)",
         "Agent Service (8003)",
         "Gateway (8000)",
         "Frontend (5173)"
