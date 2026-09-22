@@ -3,8 +3,7 @@ import MessageBubble from "./MessageBubble";
 
 function MessageList() {
   const { selectedConversation } = useSelector((state) => state.conversation);
-
-  const { messages } = useSelector((state) => state.message);
+  const { messages, isLoading } = useSelector((state) => state.message);
 
   return (
     <div className="flex-1 overflow-y-auto px-3 sm:px-4 md:px-6 py-4 sm:py-6 space-y-3 sm:space-y-5 [scrollbar-width:none] [&::-webkit-scrollbar]:hidden">
@@ -121,6 +120,16 @@ function MessageList() {
               />
             </div>
           ))}
+          {isLoading && (
+            <div className="flex items-center gap-3 text-slate-400 p-3.5 rounded-2xl bg-[#13151a] border border-white/[0.05] w-fit ml-2 shadow-sm">
+              <div className="flex gap-1.5 items-center">
+                <span className="w-1.5 h-1.5 bg-indigo-500 rounded-full animate-bounce" style={{ animationDelay: '0ms', animationDuration: '1s' }}></span>
+                <span className="w-1.5 h-1.5 bg-indigo-500 rounded-full animate-bounce" style={{ animationDelay: '150ms', animationDuration: '1s' }}></span>
+                <span className="w-1.5 h-1.5 bg-indigo-500 rounded-full animate-bounce" style={{ animationDelay: '300ms', animationDuration: '1s' }}></span>
+              </div>
+              <span className="text-[13px] font-medium tracking-wide">Thinking...</span>
+            </div>
+          )}
         </div>
       )}
     </div>

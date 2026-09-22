@@ -9,10 +9,14 @@ export const visionAgent=async (state) => {
          const llm=await getModel("image")
     const res=await llm.invoke(`
         You are an elite AI image prompt engineer.
+    const res=await llm.invoke(`You are JettAI Vision Prompt Engineer — an expert at crafting prompts for AI image generators.
 
 Convert the user request into a highly detailed image generation prompt.
+TASK: Convert the user's request into a single, highly detailed image generation prompt.
 
 Requirements:
+PROMPT STRUCTURE (use this comma-separated format):
+[Main Subject & Action], [Environment/Setting], [Lighting & Atmosphere], [Camera Angle & Lens], [Art Style & Medium], [Color Palette], [Quality Modifiers]
 
 - Cinematic lighting
 - Professional composition
@@ -25,8 +29,16 @@ Requirements:
 - Depth of field
 - Professional photography
 - Stunning visuals
+QUALITY MODIFIERS TO INCLUDE:
+- 8K resolution, ultra-detailed, sharp focus
+- Photorealistic or stylistically appropriate rendering
+- Professional composition and depth of field
 
 Return only the image prompt.
+RULES:
+- Output ONLY the final image prompt as a single paragraph. No labels, no explanations, no bullet points.
+- Be vivid and specific. Replace vague words with precise visual descriptions.
+- Adapt the style to match the user's intent (photorealistic for real scenes, illustrated for creative concepts, etc.)
 
 User Request:
 ${state.prompt}

@@ -5,6 +5,7 @@ const messageSlice = createSlice({
 
   initialState: {
     messages: [],
+    isLoading: false,
   },
 
   reducers: { 

@@ -28,31 +28,29 @@
 
 ```mermaid
 graph TD
-    Client["💻 Frontend Client (React 19 + Vite)<br/>Port: 5173"] -->|HTTP / REST + Cookies| Gateway["🚪 API Gateway (Express Reverse Proxy)<br/>Port: 8000"]
+    Client["💻 Frontend Client (React 19 + Vite)<br/>Port: 5173"] -->|HTTP / REST + Cookies| Backend["⚙️ Unified Express Backend<br/>Port: 8000"]
 
-    Gateway -->|/api/auth/* & /api/chat/*| AuthChatSvc["🔑💬 Auth & Chat Service (Firebase, Mongo, Redis)<br/>Port: 8002"]
-    Gateway -->|/api/agent/*| AgentSvc["🧠 Agent Service (LangGraph Engine)<br/>Port: 8003"]
+    Backend -->|/api/auth/*| Auth["Auth Controller (Firebase, Mongo)"]
+    Backend -->|/api/chat/*| Chat["Chat Controller (Redis, Mongo)"]
+    Backend -->|/api/agent/*| AgentSvc["LangGraph Engine"]
 
     subgraph "LangGraph Agent Workflow"
-        AgentSvc --> Router["🎯 Intent Router Agent"]
+        AgentSvc --> Router["🔀 Intent Router Agent"]
         Router -->|Chat Query| ChatAgent["💬 Chat Agent (Groq / GPT-OSS)"]
         Router -->|Live Info| SearchAgent["🌐 Web Search Agent (Tavily)"]
         Router -->|Programming| CodingAgent["💻 Coding Agent (DeepSeek via OpenRouter)"]
-        Router -->|Image Upload| ImgAnalyzer["👁️ Image Analyzer (Google Gemini 3.6 Flash)"]
-        Router -->|PDF Upload / Q&A| PDFRag["📑 PDF RAG Agent (Qdrant + Groq)"]
+        Router -->|Image Upload| ImgAnalyzer["📸 Image Analyzer (Google Gemini 3.6 Flash)"]
+        Router -->|PDF Upload / Q&A| PDFRag["📄 PDF RAG Agent (Qdrant + Groq)"]
         Router -->|Generate PPT| PPTAgent["📊 PPT Generator (PptxGenJS + S3)"]
         Router -->|Generate Visuals| VisionAgent["🎨 Vision Prompt Agent (Pollinations + S3)"]
         SearchAgent --> ChatAgent
     end
 
     subgraph "External & Infrastructure Layers"
-        AuthChatSvc --- Redis[("⚡ Redis Session & Memory Cache<br/>Port: 6379")]
-        Gateway --- Redis
-        AgentSvc --- Redis
-        AuthChatSvc --- MongoChat[("🍃 MongoDB (Chat DB)")]
-        AgentSvc --- MongoAgent[("🍃 MongoDB (Agent Documents DB)")]
-        PDFRag --- Qdrant[("🎯 Qdrant Vector Cloud")]
-        PPTAgent --- S3
+        Backend --- Redis[("🚀 Redis Session & Memory Cache<br/>Port: 6379")]
+        Backend --- Mongo[("🍃 MongoDB Atlas")]
+        PDFRag --- Qdrant[("🔀 Qdrant Vector Cloud")]
+        PPTAgent --- S3[("☁️ AWS S3")]
         VisionAgent --- S3
     end
 ```
@@ -76,10 +74,10 @@ graph TD
 
 ## 🌟 Core Features <a id="core-features"></a>
 
-- ⚡ **Microservices Architecture with API Gateway**:
-  - **Single Entry Point (`Port 8000`)**: Centralized reverse proxy dispatching traffic to downstream services while handling CORS, rate limiting, and cookie headers.
-  - **Auth & Chat Service (`Port 8002`)**: Handles Google Sign-In with Firebase, Redis session caching, and MongoDB Atlas persistence for conversation threads and messages.
-  - **LangGraph Multi-Agent Engine (`Port 8003`)**: Stateful orchestration of multi-step AI agents and multimodal execution graphs.
+- ⚡ **Unified Monolithic Architecture**:
+  - **Single Express Backend (`Port 8000`)**: Streamlined Node.js server handling authentication, chat history, and agent orchestration without network overhead.
+  - **Auth & Chat Integrations**: Handles Google Sign-In with Firebase, Redis session caching, and unified MongoDB Atlas persistence for users, threads, and messages.
+  - **LangGraph Multi-Agent Engine**: Stateful orchestration of multi-step AI agents and multimodal execution graphs natively within the core backend.
 - 🧠 **Two-Tier Smart Memory System**:
   - In-memory Redis buffer caching the last 20 messages for instantaneous conversational response times.
   - Automatic fallback to MongoDB Atlas for cold-start history retrieval.
@@ -101,7 +99,7 @@ graph TD
 | Layer | Technologies |
 | :--- | :--- |
 | **Frontend** | React 19, Vite 8, TailwindCSS 4, Redux Toolkit, Lucide Icons, React Markdown |
-| **Backend Framework** | Node.js (ES Modules), Express 5, `express-http-proxy`, Multer |
+| **Backend Framework** | Node.js (ES Modules), Express 5, Multer |
 | **Agent Orchestration** | `@langchain/langgraph`, `@langchain/core`, `@langchain/groq`, `@langchain/google-genai`, `@langchain/openrouter` |
 | **Authentication** | Firebase Admin SDK, Redis Session Store, HTTP-Only Cookie Sessions |
 | **Databases & Storage** | MongoDB Atlas (Mongoose), Redis (`ioredis`), Qdrant Vector Cloud (`@langchain/qdrant`), AWS S3 (`@aws-sdk/client-s3`) |
@@ -115,31 +113,24 @@ graph TD
 ```
 jettAI/
 ├── .vscode/
-│   └── tasks.json                     # Automated multi-service task runner
+│   └── launch.json                      # VS Code Debugger configuration
 ├── backend/
-│   ├── docker-compose.yml             # Redis Docker configuration
-│   ├── gateway/                       # API Gateway & Reverse Proxy (Port 8000)
-│   │   ├── index.js                   # Gateway routes, CORS, cookie parser
-│   │   ├── middleware/auth.middleware.js # Session validation from Redis
-│   │   └── utils/ProxyWithHeader.js   # Proxies user headers to microservices
-│   ├── shared/                        # Shared Redis client connection
-│   └── services/
-│       ├── auth-chat/                 # Auth & Chat Service (Port 8002)
-│       │   ├── controllers/           # Auth (Firebase) and Chat (MongoDB) controllers
-│       │   ├── models/                # User, Conversation, and Message schemas
-│       │   └── routes/                # API route definitions
-│       └── agent/                     # LangGraph Multi-Agent Service (Port 8003)
-│           ├── agents/                # Agent definitions (chat, coding, pdf, ppt, vision, etc.)
-│           ├── config/                # LLM models, S3, Qdrant, Redis memory, DB connection
-│           ├── controllers/           # Agent controller & document management
-│           ├── graph/                 # LangGraph state annotations & dynamic router
-│           └── utils/                 # PDF/PPT generators, S3 helpers
-└── frontend/                          # React 19 + Vite Frontend (Port 5173)
+│   ├── docker-compose.yml               # Redis Docker configuration
+│   ├── index.js                         # Main Express server (Port 8000)
+│   ├── agents/                          # LangGraph agent definitions
+│   ├── config/                          # Firebase, LLM models, DB, S3, Qdrant
+│   ├── controllers/                     # Core logic for auth, chat, agents
+│   ├── graph/                           # LangGraph state annotations & router
+│   ├── middleware/                      # Auth protect & rate limiting logic
+│   ├── models/                          # Mongoose schemas (User, Message, etc.)
+│   ├── routes/                          # API route definitions
+│   └── utils/                           # Helper utilities (S3, tokens, etc.)
+└── frontend/                            # React 19 + Vite Frontend (Port 5173)
     ├── src/
-    │   ├── components/                # ChatArea, ChatInput, MessageList, Nav, SideBar
-    │   ├── features/                  # API client functions with VITE_SERVER_URL
-    │   ├── pages/                     # Main Home layout & authentication modal
-    │   └── redux/                     # Slices for user, chat, messages, and UI state
+    │   ├── components/                  # UI Components (ChatArea, Nav, etc.)
+    │   ├── features/                    # API client functions
+    │   ├── pages/                       # Main pages
+    │   └── redux/                       # Redux store slices
 ```
 
 ---
@@ -163,37 +154,20 @@ jettAI/
 
 ### 2. Environment Configuration
 
-Create a `.env` file in each respective service directory:
+Create a `.env` file in the `backend/` directory:
 
-#### **`backend/gateway/.env`**
+#### **`backend/.env`**
 ```env
 PORT=8000
-AUTH_SERVICE=http://localhost:8002
-CHAT_SERVICE=http://localhost:8002
-AGENT_SERVICE=http://localhost:8003
+MONGODB_URI="your_mongodb_atlas_uri"
+REDIS_URL="redis://localhost:6379"
 FRONTEND_URL="http://localhost:5173"
-REDIS_URL="redis://localhost:6379"
-```
 
-#### **`backend/services/auth-chat/.env`**
-```env
-PORT=8002
-MONGODB_URI="your_mongodb_atlas_auth_chat_uri"
-REDIS_URL="redis://localhost:6379"
-INTERNAL_SERVICE_KEY="your_internal_secret"
-```
-*(Also place your Firebase `serviceAccountKey.json` inside `backend/services/auth-chat/`)*
-
-#### **`backend/services/agent/.env`**
-```env
-PORT=8003
-MONGODB_URI="your_mongodb_atlas_agent_uri"
-REDIS_URL="redis://localhost:6379"
+# AI & API Keys
 GROQ_API_KEY="your_groq_api_key"
 GOOGLE_API_KEY="your_google_api_key"
 OPENROUTER_API_KEY="your_openrouter_api_key"
 TAVILY_API_KEY="your_tavily_api_key"
-CHAT_SERVICE="http://localhost:8002"
 
 # AWS S3 Storage
 AWS_REGION="your_aws_region"
@@ -205,6 +179,7 @@ AWS_BUCKET_NAME="your_s3_bucket_name"
 QDRANT_URL="your_qdrant_cloud_cluster_url"
 QDRANT_API_KEY="your_qdrant_api_key"
 ```
+*(Also place your Firebase `serviceAccountKey.json` directly inside the `backend/` directory)*
 
 #### **`frontend/.env`**
 ```env
@@ -216,58 +191,47 @@ VITE_SERVER_URL="http://localhost:8000"
 
 ### 3. Installation
 
-Install dependencies across all services:
+Install dependencies for the frontend and backend:
 
 ```powershell
-# Backend microservices
-cd backend/gateway && npm install
-cd ../services/auth-chat && npm install
-cd ../services/agent && npm install
+# Backend
+cd backend && npm install
 
 # Frontend
-cd ../../../frontend && npm install
+cd ../frontend && npm install
 ```
 
 ---
 
 ### 4. Running the Services
 
-#### ⚡ **One-Shortcut Launch in VS Code (Pre-configured via `.vscode/tasks.json`)**
-This repository includes a pre-configured [`.vscode/tasks.json`](.vscode/tasks.json) build task.
+#### 🚀 **One-Shortcut Launch in VS Code (Pre-configured via `.vscode/launch.json`)**
+This repository includes a pre-configured `.vscode/launch.json` debugger configuration.
 
 Simply press:
 ```
-Ctrl + Shift + B
+F5
 ```
-*(Or navigate to **Terminal** $\rightarrow$ **Run Build Task...** $\rightarrow$ **Start All Services**)*
+*(Or navigate to the **Run and Debug** tab in VS Code and hit **Play**)*
 
-VS Code will automatically open **5 dedicated terminal tabs**:
-1. 📑 **`Redis (Docker 6379)`** — Runs `docker compose up` to start Redis
-2. 📑 **`Auth & Chat Service (8002)`** — Runs `npm run dev`
-3. 📑 **`Agent Service (8003)`** — Runs `npm run dev`
-4. 📑 **`Gateway (8000)`** — Runs `npm run dev`
-5. 📑 **`Frontend (5173)`** — Runs `npm run dev`
+VS Code will automatically:
+1. Launch the Frontend in a background terminal.
+2. Launch and attach the debugger to the Backend Express Server on Port 8000.
 
 ---
 
 #### 💻 **Manual Launch**
 
-If running without VS Code tasks, run each service in a separate terminal:
+If running manually, start each component in a separate terminal:
 
 ```powershell
-# 1. Start Redis container
+# 1. Start Redis container (Optional if using cloud Redis)
 cd backend && docker compose up -d
 
-# 2. Start Auth & Chat Service (8002)
-cd backend/services/auth-chat && npm run dev
+# 2. Start Unified Backend Server (8000)
+cd backend && npm run dev
 
-# 3. Start Agent Service (8003)
-cd backend/services/agent && npm run dev
-
-# 4. Start Gateway (8000)
-cd backend/gateway && npm run dev
-
-# 5. Start Frontend (5173)
+# 3. Start Frontend (5173)
 cd frontend && npm run dev
 ```
 

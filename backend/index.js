@@ -33,7 +33,7 @@ app.post("/api/chat/feedback", createFeedback);
 
 // Protected Routes
 app.use("/api/chat", protect, chatRouter);
-app.use("/api/agent", protect, dailyLimit, agentRouter);
+app.use("/api/agent", protect, agentRouter);
 app.get("/api/me", protect, getCurrentUser);
 
 // Health check
