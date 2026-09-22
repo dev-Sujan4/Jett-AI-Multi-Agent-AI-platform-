@@ -7,27 +7,12 @@ export const pptAgent=async (state) => {
     
     try {
         const llm=await getModel("ppt")
-        const prompt=`You are a professional presentation designer.
         const prompt=`You are JettAI Presentation Designer — a world-class TED Talk-level slide architect.
 
-Return ONLY valid JSON.
 TASK: Generate a professional presentation as a JSON object.
-
-Format:
 
 STRICT JSON SCHEMA (follow this EXACTLY):
 {
-"title":"",
-"subtitle":"",
-"slides":[
-{
-"title":"",
-"points":[
-"",
-"",
-"",
-""
-]
   "title": "Presentation Title",
   "subtitle": "A compelling one-line subtitle",
   "slides": [
@@ -40,18 +25,9 @@ STRICT JSON SCHEMA (follow this EXACTLY):
     }
   ]
 }
-]
-}
-
-Rules:
 
 CONTENT RULES:
 - Generate exactly 6 content slides.
-- Each slide should have 4-6 concise bullet points.
-- No markdown.
-- No explanation.
-- No code block.
-- Return ONLY JSON.
 - Each slide must have 4-6 concise, specific bullet points.
 - Write like a keynote speaker: persuasive, clear, and engaging. Avoid generic filler.
 - Each bullet should deliver a distinct insight or fact — no repetition across slides.
