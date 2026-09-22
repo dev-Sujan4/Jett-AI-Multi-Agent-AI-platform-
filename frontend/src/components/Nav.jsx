@@ -27,24 +27,30 @@ function Nav() {
               </div>
             </>
           ) : (
-            <div className="text-[13px] sm:text-[14px] font-semibold text-slate-400 tracking-tight">
-              JettAI
+            <div className="flex items-center gap-2.5">
+              <div className="flex items-center justify-center w-8 h-8 rounded-xl bg-gradient-to-br from-indigo-500/15 to-violet-500/15 border border-indigo-400/15 shadow-[0_0_18px_rgba(99,102,241,0.1)]">
+                <span className="w-1.5 h-1.5 rounded-full bg-indigo-400 shadow-[0_0_10px_rgba(129,140,248,0.9)]" />
+              </div>
+
+              <div className="text-[14px] sm:text-[15px] font-semibold tracking-tight text-slate-200">
+                Jett<span className="text-indigo-400">AI</span>
+              </div>
             </div>
           )}
         </div>
 
         {/* Top-right "💬 Feedback" trigger */}
         <div className="flex items-center gap-2 ml-auto">
-  <button
-    type="button"
-    onClick={() => setIsFeedbackOpen(true)}
-    className="flex items-center gap-2 px-4 py-2 rounded-full text-sm font-semibold text-white bg-gradient-to-r from-indigo-500 to-violet-500 border border-indigo-300/30 shadow-md shadow-indigo-500/20 hover:from-indigo-400 hover:to-violet-400 hover:shadow-lg hover:shadow-indigo-500/30 transition-all duration-200 cursor-pointer shrink-0 active:scale-95"
-    aria-label="Give feedback"
-  >
-    <span className="text-[15px]">💬</span>
-    <span>Feedback</span>
-  </button>
-</div>
+          <button
+            type="button"
+            onClick={() => setIsFeedbackOpen(true)}
+            className="flex items-center gap-2 px-4 py-2 rounded-full text-sm font-semibold text-white bg-gradient-to-r from-indigo-500 to-violet-500 border border-indigo-300/30 shadow-md shadow-indigo-500/20 hover:from-indigo-400 hover:to-violet-400 hover:shadow-lg hover:shadow-indigo-500/30 transition-all duration-200 cursor-pointer shrink-0 active:scale-95"
+            aria-label="Give feedback"
+          >
+            <span className="text-[15px]">💬</span>
+            <span>Feedback</span>
+          </button>
+        </div>
       </div>
 
       {/* Centered Feedback Modal */}

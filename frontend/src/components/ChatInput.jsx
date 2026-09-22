@@ -27,6 +27,32 @@ function ChatInput() {
         }
     }, [selectedConversation?._id])
 
+    const handleVoiceInput = () => {
+    const SpeechRecognition =
+        window.SpeechRecognition || window.webkitSpeechRecognition
+
+    if (!SpeechRecognition) {
+        alert("Voice input is not supported in this browser.")
+        return
+    }
+
+    const recognition = new SpeechRecognition()
+
+    recognition.lang = "en-US"
+    recognition.continuous = false
+    recognition.interimResults = false
+
+    recognition.onresult = (event) => {
+        const transcript = event.results[0][0].transcript
+
+        setValue((prev) =>
+            prev ? `${prev} ${transcript}` : transcript
+        )
+    }
+
+    recognition.start()
+}
+
     const handleRemoveFile = async () => {
         setSelectedFile(null)
         if (fileRef.current) {
@@ -216,18 +242,20 @@ function ChatInput() {
             }} />
 
     
-                    <button className="flex items-center justify-center w-7 h-7 sm:w-8 sm:h-8 rounded-lg text-slate-600 hover:text-slate-400 hover:bg-white/[0.05] border border-transparent hover:border-white/[0.06] transition-all duration-150 bg-transparent cursor-pointer" onClick={() => fileRef.current.click()} aria-label="Attach file">
+                    <button className="flex items-center justify-center w-7 h-7 sm:w-8 sm:h-8 rounded-lg text-slate-600 hover:text-slate-400 hover:bg-white/[0.05] border border-transparent hover:border-white/[0.06] transition-all duration-150 bg-transparent cursor-pointer" onClick={() => fileRef.current.click()} aria-label="Attach file" title='Attach file' >
                         <Paperclip size={15}/>
                     </button>
-                    <button className="flex items-center justify-center w-7 h-7 sm:w-8 sm:h-8 rounded-lg text-slate-600 hover:text-slate-400 hover:bg-white/[0.05] border border-transparent hover:border-white/[0.06] transition-all duration-150 bg-transparent cursor-pointer" aria-label="Voice input">
+                    <button className="flex items-center justify-center w-7 h-7 sm:w-8 sm:h-8 rounded-lg text-slate-600 hover:text-slate-400 hover:bg-white/[0.05] border border-transparent hover:border-white/[0.06] transition-all duration-150 bg-transparent cursor-pointer" title="mic" aria-label="Voice input"
+                    onClick={handleVoiceInput}
+                    >   
                         <Mic size={15}/>
                     </button>
                 </div>
                 <button
                 disabled={!value}
                 onClick={handleSendMessage}
-                aria-label="Send message"
-                title="Send message"
+                aria-label="Send"
+                title="Send"
                 className={`flex items-center justify-center w-7 h-7 sm:w-8 sm:h-8 rounded-lg border-none cursor-pointer transition-all duration-150 ${value.trim()?"bg-gradient-to-br from-indigo-500 to-violet-700 hover:opacity-90 text-white":"bg-white/0.05 text-slate-600 cursor-not-allowed"}`}>
                     <Send size={14}/>
                 </button>
