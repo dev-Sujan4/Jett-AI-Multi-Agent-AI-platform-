@@ -1,16 +1,41 @@
-# React + Vite
+# JettAI Frontend
 
-This template provides a minimal setup to get React working in Vite with HMR and some ESLint rules.
+This is the frontend client for **JettAI**, a multi-agent AI platform. It provides a modern, responsive, and interactive chat interface powered by React and Vite.
 
-Currently, two official plugins are available:
+## Tech Stack
+- **Framework**: React 19 + Vite
+- **Styling**: TailwindCSS 4
+- **State Management**: Redux Toolkit
+- **Icons**: Lucide React
+- **Markdown**: React Markdown (with syntax highlighting)
 
-- [@vitejs/plugin-react](https://github.com/vitejs/vite-plugin-react/blob/main/packages/plugin-react) uses [Oxc](https://oxc.rs)
-- [@vitejs/plugin-react-swc](https://github.com/vitejs/vite-plugin-react/blob/main/packages/plugin-react-swc) uses [SWC](https://swc.rs/)
+## Features
+- ⚡ **Real-time Chat**: Connects to the JettAI API Gateway.
+- 🤖 **Agent Selection**: Toggle between Auto, Coding, Vision, PDF RAG, PPT generation, and Search agents.
+- 📱 **Responsive UI**: Fully optimized for mobile, tablet, and desktop devices.
+- 🎙️ **Voice Input**: Integrated browser speech recognition.
+- 📎 **File Uploads**: Supports attaching PDFs and images to prompts.
 
-## React Compiler
+## Getting Started
 
-The React Compiler is not enabled on this template because of its impact on dev & build performances. To add it, see [this documentation](https://react.dev/learn/react-compiler/installation).
+Make sure you have Node.js v20+ installed.
 
-## Expanding the ESLint configuration
+### 1. Install Dependencies
+```bash
+npm install
+```
 
-If you are developing a production application, we recommend using TypeScript with type-aware lint rules enabled. Check out the [TS template](https://github.com/vitejs/vite/tree/main/packages/create-vite/template-react-ts) for information on how to integrate TypeScript and [`typescript-eslint`](https://typescript-eslint.io) in your project.
+### 2. Environment Variables
+Create a `.env` file in the root of the `frontend` directory:
+```env
+VITE_FIREBASE_API_KEY="your_firebase_web_api_key"
+VITE_SERVER_URL="http://localhost:8000"
+```
+*(The server URL should point to your locally running JettAI API Gateway).*
+
+### 3. Run Development Server
+```bash
+npm run dev
+```
+
+The application will be available at `http://localhost:5173`.

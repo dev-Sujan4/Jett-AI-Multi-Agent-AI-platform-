@@ -30,8 +30,7 @@
 graph TD
     Client["💻 Frontend Client (React 19 + Vite)<br/>Port: 5173"] -->|HTTP / REST + Cookies| Gateway["🚪 API Gateway (Express Reverse Proxy)<br/>Port: 8000"]
 
-    Gateway -->|/api/auth/*| AuthSvc["🔑 Auth Service (Firebase + Redis)<br/>Port: 8001"]
-    Gateway -->|/api/chat/*| ChatSvc["💬 Chat Service (MongoDB Atlas)<br/>Port: 8002"]
+    Gateway -->|/api/auth/* & /api/chat/*| AuthChatSvc["🔑💬 Auth & Chat Service (Firebase, Mongo, Redis)<br/>Port: 8002"]
     Gateway -->|/api/agent/*| AgentSvc["🧠 Agent Service (LangGraph Engine)<br/>Port: 8003"]
 
     subgraph "LangGraph Agent Workflow"
@@ -48,10 +47,10 @@ graph TD
     end
 
     subgraph "External & Infrastructure Layers"
-        AuthSvc --- Redis[("⚡ Redis Session & Memory Cache<br/>Port: 6379")]
+        AuthChatSvc --- Redis[("⚡ Redis Session & Memory Cache<br/>Port: 6379")]
         Gateway --- Redis
         AgentSvc --- Redis
-        ChatSvc --- MongoChat[("🍃 MongoDB (Chat DB)")]
+        AuthChatSvc --- MongoChat[("🍃 MongoDB (Chat DB)")]
         AgentSvc --- MongoAgent[("🍃 MongoDB (Agent Documents DB)")]
         PDFRag --- Qdrant[("🎯 Qdrant Vector Cloud")]
         PDFAgent --- S3[("📦 AWS S3 Bucket")]
@@ -82,8 +81,7 @@ graph TD
 
 - ⚡ **Microservices Architecture with API Gateway**:
   - **Single Entry Point (`Port 8000`)**: Centralized reverse proxy dispatching traffic to downstream services while handling CORS, rate limiting, and cookie headers.
-  - **Firebase Authentication & Redis Sessions (`Port 8001`)**: Secure Google Sign-In with Redis session caching and dynamic cross-domain cookie handling.
-  - **Conversation & Thread History (`Port 8002`)**: MongoDB Atlas persistence for conversation threads and individual message exchanges.
+  - **Auth & Chat Service (`Port 8002`)**: Handles Google Sign-In with Firebase, Redis session caching, and MongoDB Atlas persistence for conversation threads and messages.
   - **LangGraph Multi-Agent Engine (`Port 8003`)**: Stateful orchestration of multi-step AI agents and multimodal execution graphs.
 - 🧠 **Two-Tier Smart Memory System**:
   - In-memory Redis buffer caching the last 20 messages for instantaneous conversational response times.
@@ -129,12 +127,10 @@ jettAI/
 │   │   └── utils/ProxyWithHeader.js   # Proxies user headers to microservices
 │   ├── shared/                        # Shared Redis client connection
 │   └── services/
-│       ├── auth/                      # Auth Service (Port 8001)
-│       │   ├── controllers/auth.controller.js # Google/Firebase login, Redis sessions
-│       │   └── models/user.model.js   # User MongoDB schema
-│       ├── chat/                      # Chat & History Service (Port 8002)
-│       │   ├── controllers/chat.controller.js # Conversations and messages CRUD
-│       │   └── models/                # Conversation & Message schemas
+│       ├── auth-chat/                 # Auth & Chat Service (Port 8002)
+│       │   ├── controllers/           # Auth (Firebase) and Chat (MongoDB) controllers
+│       │   ├── models/                # User, Conversation, and Message schemas
+│       │   └── routes/                # API route definitions
 │       └── agent/                     # LangGraph Multi-Agent Service (Port 8003)
 │           ├── agents/                # Agent definitions (chat, coding, pdf, ppt, vision, etc.)
 │           ├── config/                # LLM models, S3, Qdrant, Redis memory, DB connection
@@ -175,26 +171,21 @@ Create a `.env` file in each respective service directory:
 #### **`backend/gateway/.env`**
 ```env
 PORT=8000
-AUTH_SERVICE=http://localhost:8001
+AUTH_SERVICE=http://localhost:8002
 CHAT_SERVICE=http://localhost:8002
 AGENT_SERVICE=http://localhost:8003
 FRONTEND_URL="http://localhost:5173"
 REDIS_URL="redis://localhost:6379"
 ```
 
-#### **`backend/services/auth/.env`**
-```env
-PORT=8001
-MONGODB_URI="your_mongodb_atlas_auth_uri"
-REDIS_URL="redis://localhost:6379"
-```
-*(Also place your Firebase `serviceAccountKey.json` inside `backend/services/auth/`)*
-
-#### **`backend/services/chat/.env`**
+#### **`backend/services/auth-chat/.env`**
 ```env
 PORT=8002
-MONGODB_URI="your_mongodb_atlas_chat_uri"
+MONGODB_URI="your_mongodb_atlas_auth_chat_uri"
+REDIS_URL="redis://localhost:6379"
+INTERNAL_SERVICE_KEY="your_internal_secret"
 ```
+*(Also place your Firebase `serviceAccountKey.json` inside `backend/services/auth-chat/`)*
 
 #### **`backend/services/agent/.env`**
 ```env
@@ -233,8 +224,7 @@ Install dependencies across all services:
 ```powershell
 # Backend microservices
 cd backend/gateway && npm install
-cd ../services/auth && npm install
-cd ../services/chat && npm install
+cd ../services/auth-chat && npm install
 cd ../services/agent && npm install
 
 # Frontend
@@ -254,13 +244,12 @@ Ctrl + Shift + B
 ```
 *(Or navigate to **Terminal** $\rightarrow$ **Run Build Task...** $\rightarrow$ **Start All Services**)*
 
-VS Code will automatically open **6 dedicated terminal tabs**:
+VS Code will automatically open **5 dedicated terminal tabs**:
 1. 📑 **`Redis (Docker 6379)`** — Runs `docker compose up` to start Redis
-2. 📑 **`Auth Service (8001)`** — Runs `npm run dev`
-3. 📑 **`Chat Service (8002)`** — Runs `npm run dev`
-4. 📑 **`Agent Service (8003)`** — Runs `npm run dev`
-5. 📑 **`Gateway (8000)`** — Runs `npm run dev`
-6. 📑 **`Frontend (5173)`** — Runs `npm run dev`
+2. 📑 **`Auth & Chat Service (8002)`** — Runs `npm run dev`
+3. 📑 **`Agent Service (8003)`** — Runs `npm run dev`
+4. 📑 **`Gateway (8000)`** — Runs `npm run dev`
+5. 📑 **`Frontend (5173)`** — Runs `npm run dev`
 
 ---
 
@@ -272,19 +261,16 @@ If running without VS Code tasks, run each service in a separate terminal:
 # 1. Start Redis container
 cd backend && docker compose up -d
 
-# 2. Start Auth Service (8001)
-cd backend/services/auth && npm run dev
+# 2. Start Auth & Chat Service (8002)
+cd backend/services/auth-chat && npm run dev
 
-# 3. Start Chat Service (8002)
-cd backend/services/chat && npm run dev
-
-# 4. Start Agent Service (8003)
+# 3. Start Agent Service (8003)
 cd backend/services/agent && npm run dev
 
-# 5. Start Gateway (8000)
+# 4. Start Gateway (8000)
 cd backend/gateway && npm run dev
 
-# 6. Start Frontend (5173)
+# 5. Start Frontend (5173)
 cd frontend && npm run dev
 ```
 
