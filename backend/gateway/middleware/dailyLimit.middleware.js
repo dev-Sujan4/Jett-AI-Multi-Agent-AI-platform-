@@ -1,4 +1,4 @@
-import redis from "../../shared/redis/redis.js";
+import redis from "../config/redis.js";
 
 const MAX_REQUESTS = 4;
 const WINDOW_SECONDS = 24 * 60 * 60; // 24 hours
