@@ -40,7 +40,6 @@ graph TD
         Router -->|Programming| CodingAgent["💻 Coding Agent (DeepSeek via OpenRouter)"]
         Router -->|Image Upload| ImgAnalyzer["👁️ Image Analyzer (Google Gemini 3.6 Flash)"]
         Router -->|PDF Upload / Q&A| PDFRag["📑 PDF RAG Agent (Qdrant + Groq)"]
-        Router -->|Generate PDF| PDFAgent["📄 PDF Generator (PDFKit + S3)"]
         Router -->|Generate PPT| PPTAgent["📊 PPT Generator (PptxGenJS + S3)"]
         Router -->|Generate Visuals| VisionAgent["🎨 Vision Prompt Agent (Pollinations + S3)"]
         SearchAgent --> ChatAgent
@@ -53,7 +52,6 @@ graph TD
         AuthChatSvc --- MongoChat[("🍃 MongoDB (Chat DB)")]
         AgentSvc --- MongoAgent[("🍃 MongoDB (Agent Documents DB)")]
         PDFRag --- Qdrant[("🎯 Qdrant Vector Cloud")]
-        PDFAgent --- S3[("📦 AWS S3 Bucket")]
         PPTAgent --- S3
         VisionAgent --- S3
     end
