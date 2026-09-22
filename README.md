@@ -69,7 +69,6 @@ graph TD
 | 💻 **Coding Agent** | ChatOpenRouter (`deepseek/deepseek-chat`) | System architecture, debugging, clean code generation | Production-grade code blocks with file path headers |
 | 👁️ **Image Analyzer** | ChatGoogleGenerativeAI (`gemini-3.6-flash`) | Multimodal analysis of uploaded images (charts, text, photos) | Grounded visual analysis strictly based on image |
 | 📑 **PDF RAG Agent** | Qdrant Cloud + ChatGroq | Semantic Q&A over uploaded PDF documents | Embeds chunks into Qdrant vector collection for retrieval |
-| 📄 **PDF Generator** | ChatGroq + PDFKit | Automatic generation of structured, multi-section PDF documents | Uploads to AWS S3; returns 24h presigned download link |
 | 📊 **PPT Generator** | ChatGroq + PptxGenJS | Multi-slide presentation creation with tailored slide layouts | Uploads to AWS S3; returns presigned download link |
 | 🎨 **Vision Agent** | ChatGroq + Pollinations.ai | Transforms descriptive ideas into 8K photo-realistic image prompts | Generates image, uploads to S3, returns download link |
 
