@@ -15,6 +15,5 @@ router.get("/get-conversations", getConversations);
 router.post("/update-conversation", updateConversation);
 router.post("/save-message", saveMessage);
 router.get("/get-messages/:conversationId", getMessages);
-router.post("/feedback", createFeedback);
 
 export default router;

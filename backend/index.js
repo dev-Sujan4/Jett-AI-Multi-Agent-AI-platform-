@@ -14,6 +14,7 @@ import authRouter from "./routes/auth.routes.js";
 import chatRouter from "./routes/chat.routes.js";
 import agentRouter from "./routes/agent.route.js";
 import { getCurrentUser } from "./controllers/user.controller.js";
+import { createFeedback } from "./controllers/chat.controller.js";
 
 const port = process.env.PORT || 8000;
 const app = express();
@@ -28,8 +29,11 @@ app.use(
 app.use(express.json());
 app.use(cookieParser());
 
-// Routes
+// Public Routes
 app.use("/api/auth", authRouter);
+app.post("/api/chat/feedback", createFeedback);
+
+// Protected Routes
 app.use("/api/chat", protect, chatRouter);
 app.use("/api/agent", protect, dailyLimit, agentRouter);
 app.get("/api/me", protect, getCurrentUser);
@@ -45,3 +49,4 @@ app.listen(port, () => {
     console.error("Failed to connect to database on startup:", err);
   });
 });
+
