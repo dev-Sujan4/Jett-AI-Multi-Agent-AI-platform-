@@ -104,7 +104,6 @@ Choose exactly one:
 chat = general conversation, explanations, learning
 search = current, latest, live, recent, or web information
 coding = programming, code, debugging, software development
-pdf = PDF/document tasks
 ppt = PowerPoint/slides/presentations
 vision = image understanding, analysis, generation, or editing
 
