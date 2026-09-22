@@ -4,7 +4,7 @@ import Feedback from "../models/feedback.model.js";
 
 export const createConversation = async (req, res) => {
   try {
-    const userId = req.headers["x-user-id"];
+    const userId = req.user?.userId;
     console.log(userId);
     const conversation = await Conversation.create({
       userId: userId,
@@ -33,7 +33,7 @@ export const updateConversation = async (req, res) => {
 
 export const getConversations = async (req, res) => {
   try {
-    const userId = req.headers["x-user-id"];
+    const userId = req.user?.userId;
     console.log(userId);
     const conversation = await Conversation.find({
       userId: userId,

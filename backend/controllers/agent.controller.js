@@ -2,6 +2,7 @@ import axios from "axios";
 import { graph } from "../agents/graph.js";
 import { addMessage } from "../config/memory.js";
 import Document from "../models/document.model.js";
+import Message from "../models/message.model.js";
 import { deleteVectorCollection } from "../config/vectorDb.js";
 
 export const agent = async (req, res) => {
@@ -37,20 +38,20 @@ export const agent = async (req, res) => {
       await addMessage(conversationId, "user", prompt);
       await addMessage(conversationId, "assistant", aiResponse);
 
-      if (process.env.CHAT_SERVICE) {
-        await axios.post(`${process.env.CHAT_SERVICE}/save-message`, {
-          conversationId,
-          role: "user",
-          content: prompt,
-        }).catch((err) => console.warn("Chat service save user msg failed:", err.message));
+      // Save user prompt
+      await Message.create({
+        conversationId,
+        role: "user",
+        content: prompt,
+      }).catch((err) => console.warn("Database save user msg failed:", err.message));
 
-        await axios.post(`${process.env.CHAT_SERVICE}/save-message`, {
-          conversationId,
-          role: "assistant",
-          content: aiResponse,
-          images: result?.images,
-        }).catch((err) => console.warn("Chat service save assistant msg failed:", err.message));
-      }
+      // Save AI response
+      await Message.create({
+        conversationId,
+        role: "assistant",
+        content: aiResponse,
+        images: result?.images,
+      }).catch((err) => console.warn("Database save assistant msg failed:", err.message));
     } catch (saveErr) {
       console.warn("Message memory save warning:", saveErr.message);
     }

@@ -1,15 +1,41 @@
 {
-  "name": "backend",
+  "name": "jett-ai-backend",
   "version": "1.0.0",
-  "description": "",
+  "description": "Merged Backend for JettAI",
   "main": "index.js",
   "type": "module",
   "scripts": {
-    "test": "echo \"Error: no test specified\" && exit 1"
+    "start": "node index.js",
+    "dev": "nodemon index.js"
   },
-  "author": "",
-  "license": "ISC",
   "dependencies": {
-    "ioredis": "^6.0.0"
+    "@aws-sdk/client-s3": "^3.1132.0",
+    "@aws-sdk/s3-request-presigner": "^3.1132.0",
+    "@google/generative-ai": "^0.24.1",
+    "@langchain/core": "^1.2.11",
+    "@langchain/google-genai": "^2.3.2",
+    "@langchain/groq": "^1.3.1",
+    "@langchain/langgraph": "^1.4.14",
+    "@langchain/openrouter": "^0.4.13",
+    "@langchain/qdrant": "^1.0.3",
+    "@langchain/tavily": "^1.2.0",
+    "@langchain/textsplitters": "^1.0.1",
+    "@qdrant/js-client-rest": "^1.19.0",
+    "axios": "^1.20.0",
+    "cookie-parser": "^1.4.7",
+    "cors": "^2.8.6",
+    "dotenv": "^17.4.2",
+    "express": "^5.2.1",
+    "firebase-admin": "^14.3.0",
+    "ioredis": "^6.0.0",
+    "mongoose": "^9.9.5",
+    "morgan": "^1.12.0",
+    "multer": "^2.4.0",
+    "pdf-parse": "^2.4.5",
+    "pdfkit": "^0.20.2",
+    "pptxgenjs": "^3.12.0"
+  },
+  "devDependencies": {
+    "nodemon": "^3.1.14"
   }
 }
