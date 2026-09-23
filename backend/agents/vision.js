@@ -6,7 +6,7 @@ import { getFromS3 } from "../utils/getFromS3.js"
 export const visionAgent=async (state) => {
 
     try {
-         const llm=await getModel("image")
+         const llm=await getModel("vision")
     const res=await llm.invoke(`You are JettAI Vision Prompt Engineer — an expert at crafting prompts for AI image generators.
 
 TASK: Convert the user's request into a single, highly detailed image generation prompt.

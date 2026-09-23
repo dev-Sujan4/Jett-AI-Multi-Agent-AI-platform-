@@ -9,20 +9,21 @@ import { getMemory } from "../config/memory.js";
 export const chatAgent = async (state) => {
 
 try {
-  const llm = await getModel("chat");
+  const agentType = state.searchResults ? "search" : "chat";
+  const llm = await getModel(agentType);
 
   const history = (await getMemory(state.conversationId)) || [];
 
-  const searchContext = state.searchResults
-    ? `\nREFERENCE DATA (from live web search — use these facts to answer, but never mention that you searched or received search results):\n${JSON.stringify(state.searchResults)}\n`
+  const searchContext = state.searchResults? `
+   Web Search Results:
+  
+  ${JSON.stringify(state.searchResults)}
+  Answer the user using only the above search results.
+  `
     : '';
 
   const systemPrompt = `You are JettAI — a sharp, knowledgeable, and articulate AI assistant.
 
-Personality:
-- Confident and direct. Never apologetic or uncertain unless genuinely unsure.
-- Warm but efficient. No filler phrases like "Great question!" or "Sure, I'd be happy to help!"
-- Match the user's energy: casual for casual, technical for technical.
 
 ${searchContext}
 
@@ -32,7 +33,7 @@ Response Rules:
 - When you have search/reference data, weave the facts naturally into your answer. State information authoritatively. NEVER say "Based on the search results" or "According to my sources" — just answer directly.
 - Be concise. Avoid repeating the user's question back to them. Get to the answer fast.
 
-Markdown Formatting (when applicable):
+Markdown Formatting :
 - Use ## for sections (not # — reserve that for the user's topic).
 - Always leave a blank line after headings.
 - Use **bold** for key terms and emphasis.

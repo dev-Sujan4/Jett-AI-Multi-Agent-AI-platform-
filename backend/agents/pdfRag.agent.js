@@ -117,7 +117,7 @@ export const pdfRag = async (state) => {
 
     console.log(`[PDF RAG] Querying existing collection: ${collectionName}`);
     const store = await getExistingVectorStore(collectionName);
-    const relevantDocs = await store.similaritySearch(state.prompt, 20);
+    const relevantDocs = await store.similaritySearch(state.prompt, 8);
 
     const context = relevantDocs.map((d) => d.pageContent).join("\n\n");
 

@@ -42,8 +42,8 @@ function MessageList() {
 
     {/* Description */}
     <p className="max-w-2xl mx-auto mt-6 text-sm sm:text-base text-slate-400 leading-relaxed">
-      Choose an agent from the input area below and describe what you want to accomplish.
-      Each agent is designed to handle a different type of task.
+      Choose an agent from the input area below and describe what you want to accomplish. <br />
+      Select specific agents for better task results.
     </p>
 
 
@@ -57,19 +57,21 @@ function MessageList() {
       <div className="flex flex-wrap items-center justify-center gap-2">
 
         <div className="px-3.5 py-2.5 rounded-xl border border-white/[0.07] bg-white/[0.025] hover:bg-white/[0.05] hover:border-indigo-400/20 transition-all duration-200 text-xs text-slate-400 shadow-sm">
-          Explain recursion in Java
+          Explain recursion in Java <br />
+          (Select chat agent)
         </div>
 
         <div className="px-3.5 py-2.5 rounded-xl border border-white/[0.07] bg-white/[0.025] hover:bg-white/[0.05] hover:border-indigo-400/20 transition-all duration-200 text-xs text-slate-400 shadow-sm">
-          Search the latest AI news
+          Search the latest AI news <br />
+          (Select search agent)
         </div>
 
-        <div className="px-3.5 py-2.5 rounded-xl border border-white/[0.07] bg-white/[0.025] hover:bg-white/[0.05] hover:border-indigo-400/20 transition-all duration-200 text-xs text-slate-400 shadow-sm">
-          Analyze this PDF
+        <div className="hidden sm:block px-3.5 py-2.5 rounded-xl border border-white/[0.07] bg-white/[0.025] hover:bg-white/[0.05] hover:border-indigo-400/20 transition-all duration-200 text-xs text-slate-400 shadow-sm">
+          Analyze this PDF <br /> (Select PDF agent)
         </div>
 
-        <div className="px-3.5 py-2.5 rounded-xl border border-white/[0.07] bg-white/[0.025] hover:bg-white/[0.05] hover:border-indigo-400/20 transition-all duration-200 text-xs text-slate-400 shadow-sm">
-          Review this image
+        <div className="hidden sm:block px-3.5 py-2.5 rounded-xl border border-white/[0.07] bg-white/[0.025] hover:bg-white/[0.05] hover:border-indigo-400/20 transition-all duration-200 text-xs text-slate-400 shadow-sm">
+          Review this image <br />(Select image agent)
         </div>
 
       </div>
@@ -77,7 +79,7 @@ function MessageList() {
 
 
     {/* Usage Limit */}
-    <div className="mt-8 inline-flex items-center gap-3 px-4 py-2.5 rounded-xl border border-indigo-400/10 bg-indigo-500/[0.04]">
+    <div className="hidden sm:inline-flex mt-8 items-center gap-3 px-4 py-2.5 rounded-xl border border-indigo-400/10 bg-indigo-500/[0.04]">
 
       <div className="flex items-center gap-2 text-xs text-slate-500">
         <span className="w-1.5 h-1.5 rounded-full bg-indigo-400 shadow-[0_0_8px_rgba(129,140,248,0.7)]" />
@@ -96,7 +98,7 @@ function MessageList() {
     {/* Feedback Reminder */}
     <div className="mt-6 flex items-center justify-center gap-2 text-s">
 
-      <span className="text-slate-600">
+      <span className="hidden sm:block text-slate-600">
         Enjoying the experience?
       </span>
 

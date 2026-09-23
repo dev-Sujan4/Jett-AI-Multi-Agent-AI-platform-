@@ -16,13 +16,13 @@ try {
 } catch (error) {
     console.log(error)
 
-    if (error.response?.status === 429) {
+    if (error.response?.data?.message) {
       return {
         response: error.response.data.message
       }
     }
 
-    return null 
+     return { response: "An unexpected error occurred. Please try again."}; 
 }
 }
 

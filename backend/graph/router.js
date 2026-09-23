@@ -66,11 +66,16 @@ export const router = async (state) => {
         ...state,
         agent: "imageAnalyzer",
       };
-    } else {
+    } else if (selectedAgent === "imageanalyzer") {
       return {
         ...state,
         agent: "imageAnalyzer",
         aiResponse: "Please upload an image first.",
+      };
+    } else {
+      return {
+        ...state,
+        agent: "vision",
       };
     }
   }

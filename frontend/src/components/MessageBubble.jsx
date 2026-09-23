@@ -28,8 +28,8 @@ function MessageBubble({ role, content, images = [], image = [] }) {
   break-words overflow-hidden
   leading-relaxed text-[13.5px] sm:text-[14px]
         ${isUser
-          ? "bg-gradient-to-br from-indigo-500 to-violet-700 text-white rounded-tr-sm"
-          : " text-slate-200 rounded-tl-sm"
+          ? "bg-gradient-to-br from-indigo-500 to-violet-700 text-white rounded-tr-sm shadow-md"
+          : "bg-[#12151e]/85 border border-white/[0.07] text-slate-200 rounded-tl-sm shadow-sm backdrop-blur-sm"
         }`}>
 
 
@@ -53,16 +53,22 @@ function MessageBubble({ role, content, images = [], image = [] }) {
           remarkPlugins={[remarkGfm]}
           components={{
             h1: ({ children }) => (
-              <h1 className='text-xl sm:text-2xl font-bold mt-4 sm:mt-5 mb-2 sm:mb-3'>{children}</h1>
+              <h1 className='text-xl sm:text-2xl font-bold mt-4 sm:mt-5 mb-2 sm:mb-3 text-slate-100 tracking-tight'>{children}</h1>
             ),
             h2: ({ children }) => (
-              <h2 className='text-lg sm:text-xl font-semibold mt-3 sm:mt-4 mb-2'>{children}</h2>
+              <h2 className='text-lg sm:text-xl font-semibold mt-3.5 sm:mt-4 mb-2 text-indigo-200/90 border-b border-white/[0.06] pb-1.5'>{children}</h2>
             ),
             h3: ({ children }) => (
-              <h3 className='text-base sm:text-lg font-semibold mt-2.5 sm:mt-3 mb-1.5'>{children}</h3>
+              <h3 className='text-base sm:text-lg font-semibold mt-2.5 sm:mt-3 mb-1.5 text-slate-100'>{children}</h3>
+            ),
+            strong: ({ children }) => (
+              <strong className='font-semibold text-slate-100'>{children}</strong>
+            ),
+            blockquote: ({ children }) => (
+              <blockquote className='border-l-2 border-indigo-400/80 bg-indigo-500/[0.05] pl-3.5 py-1.5 my-2.5 rounded-r-lg text-slate-300 italic'>{children}</blockquote>
             ),
             p: ({ children }) => (
-              <p className='mb-2.5 sm:mb-3 whitespace-pre-wrap break-words'>{children}</p>
+              <p className='mb-2.5 sm:mb-3 whitespace-pre-wrap break-words leading-relaxed text-slate-200'>{children}</p>
             ),
             ul: ({ children }) => (
               <ul className='list-disc pl-4 sm:pl-5 space-y-1 my-2'>{children}</ul>

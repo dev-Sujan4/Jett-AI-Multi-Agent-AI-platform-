@@ -2,9 +2,9 @@ import { TavilySearch } from "@langchain/tavily";
 
 
 export const searchTool = new TavilySearch({
-  maxResults: 5,
+  maxResults: 3,
   topic: "general",
-  // includeAnswer: false,
+   includeAnswer: true,
   // includeRawContent: false,
    includeImages: true,
   // includeImageDescriptions: false,
