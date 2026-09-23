@@ -5,6 +5,10 @@ const messageSchema = new mongoose.Schema({
         type:mongoose.Schema.Types.ObjectId,
         ref:"Conversation"
     },
+    userId:{
+        type:String,
+        index:true
+    },
     role:{
         type:String,
         enum:["user","assistant"]

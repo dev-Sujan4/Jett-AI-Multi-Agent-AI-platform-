@@ -8,6 +8,7 @@ import { deleteVectorCollection } from "../config/vectorDb.js";
 export const agent = async (req, res) => {
   try {
     const { prompt, conversationId, agent } = req.body;
+    const userId = req.user?.userId;
     const file = req.file;
 
     let activeDoc = null;
@@ -41,6 +42,7 @@ export const agent = async (req, res) => {
       // Save user prompt
       await Message.create({
         conversationId,
+        userId,
         role: "user",
         content: prompt,
       }).catch((err) => console.warn("Database save user msg failed:", err.message));
@@ -48,6 +50,7 @@ export const agent = async (req, res) => {
       // Save AI response
       await Message.create({
         conversationId,
+        userId,
         role: "assistant",
         content: aiResponse,
         images: result?.images,
